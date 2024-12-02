@@ -1,0 +1,5 @@
+./gradlew jar
+
+aws s3 cp build/libs/lambda-function.jar s3://vjsulaim-dev/lambda-function.jar
+
+aws lambda update-function-code --function-name CommuteGenie --s3-bucket vjsulaim-dev --s3-key lambda-function.jar

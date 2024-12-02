@@ -1,0 +1,41 @@
+[
+  {
+    "username": "Jose",
+    "options": [
+      {
+        "option": {
+          "name": "the train",
+          "route": "CR-Worcester",
+          "startStation": "South Station",
+          "destination": "Worcester",
+          "endStation": "Westborough"
+        },
+        "minDepartureTime": {
+          "type": "FROM_NOW",
+          "offset": "PT10M"
+        },
+        "maxDepartureTime": {
+          "type": "DAILY",
+          "time": "14:30:00"
+        }
+      },
+      {
+        "option": {
+          "name": "orange line to shuttle",
+          "route": "Orange",
+          "startStation": "Downtown Crossing",
+          "destination": "Forest Hills",
+          "endStation": "Ruggles"
+        },
+        "minDepartureTime": {
+          "type": "FROM_NOW",
+          "offset": "PT5M"
+        },
+        "maxDepartureTime": {
+          "type": "DAILY",
+          "time": "13:15:00"
+        }
+      }
+    ]
+  }
+]
