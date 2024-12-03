@@ -24,7 +24,7 @@ open class MbtaApi(
      * Predictions and schedules leaving from stopName towards destination
      */
     fun getDepartures(route: String, stopName: String, destination: String): List<Schedule> {
-        return getPredictions(route, stopName, destination) + getSchedule(route, stopName, destination)
+        return getPredictions(route, stopName, destination) // + getSchedule(route, stopName, destination)
     }
 
     fun getPredictions(route: String, stopName: String, destination: String): List<Schedule> {
@@ -40,7 +40,7 @@ open class MbtaApi(
     }
 
     fun getTripsArrival(tripIds: List<String>, route: String, end: String): List<Schedule> {
-        return getScheduledOrPredictedArrival("predictions", tripIds, route, end) + getScheduledOrPredictedArrival("schedules", tripIds, route, end)
+        return getScheduledOrPredictedArrival("predictions", tripIds, route, end) // + getScheduledOrPredictedArrival("schedules", tripIds, route, end)
     }
 
     private fun getScheduledOrPredictedArrival(
@@ -74,6 +74,7 @@ open class MbtaApi(
 
     private fun getDirectionId(route: String, destination: String): Int {
         val destinations = getRouteDirectionDestinations(route)
+        if (!destinations.contains(destination)) { throw IllegalArgumentException("$destination not a valid destination for $route.") }
         return destinations.indexOf(destination)
     }
 

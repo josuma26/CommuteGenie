@@ -12,8 +12,11 @@ class CommuteGenie(
 ) {
 
     fun userTripOptions(username: String): Map<Option, List<Trip>> =
-        userConfigurations[username]?.options?.associate { Pair(it.option, tripMeetsConstraint(it)) }
-            ?: throw IllegalArgumentException("Could not find user $username")
+        userConfigurations[
+                if (isMe(username)) STRONGEST_BULL else username
+        ]?.options?.associate {
+            Pair(it.option, tripMeetsConstraint(it))
+        } ?: throw IllegalArgumentException("Could not find user $username")
 
     /**
      * Checks if a constraint can be met using MBTA predictions and schedules.
@@ -22,7 +25,7 @@ class CommuteGenie(
      *  - leaves later than 10 minutes from now
      *  - arrives less than 8am
      */
-    fun tripMeetsConstraint(constraint: Constraint): List<Trip> {
+    private fun tripMeetsConstraint(constraint: Constraint): List<Trip> {
         val option = constraint.option
         val departures = mbtaApi.getDepartures(option.route, option.startStation, option.destination)
         val leaveAfter = departures.filter {
@@ -31,10 +34,18 @@ class CommuteGenie(
         val tripIds = leaveAfter.map { it.tripId }
         val arrivals = leaveAfter.zip(
             mbtaApi.getTripsArrival(tripIds, option.route, option.endStation)
-        ).map { (leaving, arriving) -> Pair(leaving.departureTime!!, arriving) }
+        )
         val arriveBefore = arrivals.filter { it.second.arrivalTime?.let {
             time -> time <= constraint.maxDepartureTime.get()
         } ?: false }
-        return arriveBefore .map { Trip(option, it.first, it.second.arrivalTime!!) }
+        return arriveBefore .map { Trip(option, it.first.departureTime!!, it.second.arrivalTime!!) }
+    }
+
+    private fun isMe(username: String): Boolean {
+        return username == "I" || username == "me"
+    }
+
+    companion object {
+        const val STRONGEST_BULL = "Jose"
     }
 }

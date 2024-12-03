@@ -56,6 +56,7 @@ class UserOptionsHandler: IntentRequestHandler {
                 "you can take ${take}, leaves $leaves from ${option.startStation} and gets to ${option.endStation} at $arrives"
             }
             .joinToString(" or ")
+            .ifEmpty { "It's too late man, work from home" }
     }
 
 }
